@@ -23,7 +23,7 @@ function getMemeItem(totalScore: number): { category: string; item: string; mess
       { item: "치킨", message: "스트레스엔 역시 치킨이야", emoji: "🍗" },
       { item: "맥주", message: "캬 이거지", emoji: "🍺" },
       { item: "넷플릭스", message: "현실도피 1등급", emoji: "📺" },
-      { item: "센드벡", message: "누군가를 떠올려보자", emoji: "🥊" },
+      { item: "글러브", message: "누군가를 떠올리고 조용히 껴보자", emoji: "🥊" },
       { item: "퇴근", message: "오늘 제일 잘한일", emoji: "🚪" }
     ];
   } else {
@@ -35,7 +35,7 @@ function getMemeItem(totalScore: number): { category: string; item: string; mess
       { item: "돈", message: "돈좀 주세요", emoji: "💰" },
       { item: "사표", message: "보여줄께 완전히 달라진나", emoji: "📝" },
       { item: "무인도", message: "원합니다 내가 살기 위해서", emoji: "🏝️" },
-      { item: "로또", message: "인생역전 한방!", emoji: "🎰" }
+      { item: "로또", message: "인생여전 => 역전", emoji: "🎰" }
     ];
   }
   
