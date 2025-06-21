@@ -41,8 +41,8 @@ export function generateOGImage(results: BurnoutResult): Promise<string> {
     ctx.textAlign = 'center';
     ctx.fillText('번아웃 체크 결과', canvas.width / 2, 180);
 
-    // 점수 원형 배경 - 통일된 블랙 색상
-    ctx.fillStyle = '#000000';
+    // 점수 원형 배경 - 보라색 포인트 컬러
+    ctx.fillStyle = '#8b5cf6'; // purple-500
     ctx.beginPath();
     ctx.arc(canvas.width / 2, 320, 80, 0, 2 * Math.PI);
     ctx.fill();
@@ -96,8 +96,8 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: n
 }
 
 function getScoreColor(color: string): string {
-  // 모든 카테고리에서 동일한 블랙 색상 사용
-  return '#000000';
+  // 모든 카테고리에서 보라색 포인트 컬러 사용
+  return '#8b5cf6'; // purple-500
 }
 
 function getCategoryEmoji(color: string): string {
