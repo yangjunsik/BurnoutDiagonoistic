@@ -34,13 +34,18 @@ interface BurnoutResultsProps {
 
 export default function BurnoutResults({ results, answers, onRestart }: BurnoutResultsProps) {
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
-  const [isGeneratingMeme, setIsGeneratingMeme] = useState(false);
+  const [memeImageUrl, setMemeImageUrl] = useState<string>("");
   const [personalizedComment, setPersonalizedComment] = useState<string>("");
 
-  // Generate personalized comment on component mount
+  // Generate personalized comment and meme on component mount
   useEffect(() => {
     const comment = generatePersonalizedComment(answers, results);
     setPersonalizedComment(comment);
+    
+    // Generate meme image automatically
+    generateMemeImage(results, comment).then(url => {
+      setMemeImageUrl(url);
+    });
   }, [answers, results]);
   const getIcon = () => {
     switch (results.color) {
@@ -81,15 +86,9 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
     }
   };
 
-  const generateMeme = async () => {
-    setIsGeneratingMeme(true);
-    try {
-      const memeUrl = await generateMemeImage(results, personalizedComment);
-      downloadMemeImage(memeUrl, `번아웃체크-${results.category}-${Date.now()}.png`);
-    } catch (error) {
-      console.error('Failed to generate meme:', error);
-    } finally {
-      setIsGeneratingMeme(false);
+  const downloadMeme = () => {
+    if (memeImageUrl) {
+      downloadMemeImage(memeImageUrl, `번아웃체크-${results.category}-${Date.now()}.png`);
     }
   };
 
@@ -335,23 +334,31 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
             다시 체크하기
           </Button>
           
+          {/* Meme Image Display */}
+          {memeImageUrl && (
+            <Card className="border-0 shadow-lg rounded-3xl mb-6">
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-black mb-4 text-center">내 번아웃 밈</h3>
+                <div className="flex justify-center">
+                  <img 
+                    src={memeImageUrl} 
+                    alt="번아웃 결과 밈" 
+                    className="max-w-full h-auto rounded-xl shadow-lg"
+                    style={{ maxHeight: '400px' }}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="space-y-3">
             <Button
-              onClick={generateMeme}
-              disabled={isGeneratingMeme}
+              onClick={downloadMeme}
+              disabled={!memeImageUrl}
               className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
             >
-              {isGeneratingMeme ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  밈 이미지 생성 중...
-                </>
-              ) : (
-                <>
-                  <ImageIcon className="w-4 h-4 mr-2" />
-                  내 결과 밈 이미지 저장하기
-                </>
-              )}
+              <ImageIcon className="w-4 h-4 mr-2" />
+              밈 이미지 다운로드
             </Button>
 
             <Button
