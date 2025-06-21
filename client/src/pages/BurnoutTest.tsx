@@ -2,7 +2,7 @@ import { useState } from "react";
 import BurnoutLanding from "@/components/BurnoutLanding";
 import BurnoutQuestion from "@/components/BurnoutQuestion";
 import BurnoutResults from "@/components/BurnoutResults";
-import { burnoutQuestions } from "@/lib/burnoutQuestions";
+import { burnoutQuestionTexts } from "@/lib/burnoutQuestions";
 import { calculateBurnoutScore, type BurnoutResult } from "@/lib/burnoutScoring";
 
 type TestState = "landing" | "question" | "results";
@@ -27,7 +27,7 @@ export default function BurnoutTest() {
   };
 
   const nextQuestion = () => {
-    if (currentQuestion < burnoutQuestions.length - 1) {
+    if (currentQuestion < burnoutQuestionTexts.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     }
   };
@@ -58,9 +58,9 @@ export default function BurnoutTest() {
   if (testState === "question") {
     return (
       <BurnoutQuestion
-        question={burnoutQuestions[currentQuestion]}
+        question={burnoutQuestionTexts[currentQuestion]}
         questionNumber={currentQuestion + 1}
-        totalQuestions={burnoutQuestions.length}
+        totalQuestions={burnoutQuestionTexts.length}
         currentAnswer={answers[currentQuestion]}
         onAnswer={answerQuestion}
         onNext={nextQuestion}
@@ -68,7 +68,7 @@ export default function BurnoutTest() {
         onShowResults={showResults}
         canGoNext={answers[currentQuestion] !== undefined}
         canGoPrevious={currentQuestion > 0}
-        isLastQuestion={currentQuestion === burnoutQuestions.length - 1}
+        isLastQuestion={currentQuestion === burnoutQuestionTexts.length - 1}
       />
     );
   }

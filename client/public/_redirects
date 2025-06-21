@@ -1,0 +1,6 @@
+# Cloudflare Pages redirects
+# Redirect .pages.dev to custom domain for SEO
+https://*.pages.dev/* https://burnout-check.site/:splat 301!
+
+# SPA fallback
+/*    /index.html   200

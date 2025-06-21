@@ -2,6 +2,25 @@ import { Sparkles, Heart, AlertTriangle, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { type BurnoutResult } from "@/lib/burnoutScoring";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface BurnoutResultsProps {
   results: BurnoutResult;
@@ -49,7 +68,7 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
   };
 
   const shareResults = async () => {
-    const resultText = `번아웃 체크 결과: ${results.score}점 (${results.category})`;
+    const resultText = `번아웃 체크 결과: ${results.totalScore}점 (${results.category})`;
     
     if (navigator.share) {
       try {
@@ -72,6 +91,70 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
     }
   };
 
+  const chartData = {
+    labels: ['정서적 탈진', '냉소적 태도', '성취감 감소'],
+    datasets: [
+      {
+        label: '영역별 점수',
+        data: [
+          results.categoryScores.exhaustion,
+          results.categoryScores.cynicism,
+          results.categoryScores.accomplishment
+        ],
+        backgroundColor: [
+          'rgba(239, 68, 68, 0.8)',   // red for exhaustion
+          'rgba(245, 158, 11, 0.8)',  // amber for cynicism  
+          'rgba(59, 130, 246, 0.8)'   // blue for accomplishment
+        ],
+        borderColor: [
+          'rgba(239, 68, 68, 1)',
+          'rgba(245, 158, 11, 1)',
+          'rgba(59, 130, 246, 1)'
+        ],
+        borderWidth: 2,
+        borderRadius: 8,
+      }
+    ]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 20,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)'
+        },
+        ticks: {
+          font: {
+            family: 'Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif'
+          }
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            family: 'Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+            size: 11
+          }
+        }
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-md w-full animate-fade-in">
@@ -81,9 +164,9 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
           </div>
           <h2 className="text-3xl font-bold text-black mb-2">체크 완료!</h2>
           <div className="text-5xl font-bold mb-2 text-black">
-            {results.score}점
+            {results.totalScore}점
           </div>
-          <p className="text-gray-500">총 75점 중</p>
+          <p className="text-gray-500">총 60점 중</p>
         </div>
 
         <Card className="border-0 shadow-2xl rounded-3xl mb-6">
@@ -96,6 +179,32 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
               <p className="text-gray-700 leading-relaxed">
                 {results.message}
               </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-lg rounded-3xl mb-6">
+          <CardContent className="p-6">
+            <h3 className="font-semibold text-black mb-4 text-center">영역별 세부 점수</h3>
+            <div className="h-48">
+              <Bar data={chartData} options={chartOptions} />
+            </div>
+            <div className="grid grid-cols-3 gap-4 mt-4 text-xs text-center">
+              <div>
+                <div className="w-4 h-4 bg-red-400 rounded mx-auto mb-1"></div>
+                <div className="font-medium">정서적 탈진</div>
+                <div className="text-gray-600">{results.categoryScores.exhaustion}점</div>
+              </div>
+              <div>
+                <div className="w-4 h-4 bg-amber-400 rounded mx-auto mb-1"></div>
+                <div className="font-medium">냉소적 태도</div>
+                <div className="text-gray-600">{results.categoryScores.cynicism}점</div>
+              </div>
+              <div>
+                <div className="w-4 h-4 bg-blue-400 rounded mx-auto mb-1"></div>
+                <div className="font-medium">성취감 감소</div>
+                <div className="text-gray-600">{results.categoryScores.accomplishment}점</div>
+              </div>
             </div>
           </CardContent>
         </Card>

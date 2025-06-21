@@ -1,20 +1,74 @@
+// MBI 기반 3영역 × 4문항 = 12문항
 export const burnoutQuestions = [
-  "월요일 아침이 되면 출근하기 싫어진다",
-  "업무 시간에 자주 시계를 본다",
-  "퇴근 후에도 일 생각이 계속 난다",
-  "주말에도 업무 관련 연락이 오면 스트레스를 받는다",
-  "최근 들어 일에 대한 흥미가 줄어들었다",
-  "동료들과의 대화가 예전보다 귀찮게 느껴진다",
-  "업무 실수가 늘어나거나 집중력이 떨어진다",
-  "회사에서 인정받지 못한다고 느낀다",
-  "일과 개인 시간의 경계가 모호해졌다",
-  "충분히 쉬어도 피로가 풀리지 않는다",
-  "업무량에 비해 보상이 적다고 생각한다",
-  "이직이나 퇴사를 진지하게 고민한 적이 있다",
-  "최근 들어 짜증이 늘고 예민해졌다",
-  "일 때문에 가족이나 친구들과의 시간이 줄어들었다",
-  "내가 하는 일이 의미 있다고 느끼기 어렵다"
+  // 정서적 탈진 (Emotional Exhaustion) - 4문항
+  {
+    text: "업무로 인해 정신적, 신체적으로 완전히 지쳐있다",
+    category: "exhaustion",
+    weight: 1.0
+  },
+  {
+    text: "아침에 일어나서 또 하루 일해야 한다고 생각하면 피곤하다",
+    category: "exhaustion", 
+    weight: 1.0
+  },
+  {
+    text: "퇴근 후에도 충분히 쉬어도 피로가 풀리지 않는다",
+    category: "exhaustion",
+    weight: 1.2
+  },
+  {
+    text: "일과 관련된 스트레스로 인해 예민해지고 짜증이 늘었다",
+    category: "exhaustion",
+    weight: 0.9
+  },
+
+  // 냉소적 태도 (Depersonalization) - 4문항  
+  {
+    text: "동료나 고객을 그냥 하나의 업무 대상으로만 여기게 된다",
+    category: "cynicism",
+    weight: 1.1
+  },
+  {
+    text: "업무에 대한 흥미와 열정이 현저히 줄어들었다",
+    category: "cynicism",
+    weight: 1.3
+  },
+  {
+    text: "회사나 업무에 대해 냉소적이고 부정적으로 생각한다",
+    category: "cynicism",
+    weight: 1.2
+  },
+  {
+    text: "이직이나 퇴사를 진지하게 고민하고 있다",
+    category: "cynicism",
+    weight: 1.4
+  },
+
+  // 개인 성취감 감소 (Reduced Personal Accomplishment) - 4문항
+  {
+    text: "내가 하는 일이 의미 있고 가치 있다고 느끼기 어렵다",
+    category: "accomplishment",
+    weight: 1.1
+  },
+  {
+    text: "업무 성과나 능력에 대해 자신감이 떨어졌다",
+    category: "accomplishment",
+    weight: 1.0
+  },
+  {
+    text: "예전에 비해 업무 실수가 늘고 집중력이 떨어진다",
+    category: "accomplishment",
+    weight: 1.2
+  },
+  {
+    text: "회사에서 제대로 인정받지 못한다고 느낀다",
+    category: "accomplishment",
+    weight: 0.9
+  }
 ];
+
+// 간단한 접근을 위한 텍스트만 추출
+export const burnoutQuestionTexts = burnoutQuestions.map(q => q.text);
 
 export const answerOptions = [
   { value: 1, label: "전혀 아니다" },

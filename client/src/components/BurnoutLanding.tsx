@@ -27,8 +27,8 @@ export default function BurnoutLanding({ onStart }: BurnoutLandingProps) {
                 솔직하게 답해주세요
               </p>
               <div className="flex justify-center space-x-6 text-sm text-gray-500">
-                <span>📝 15문항</span>
-                <span>⏱️ 3분</span>
+                <span>📝 12문항</span>
+                <span>⏱️ 2분</span>
                 <span>📱 간편하게</span>
               </div>
             </div>

@@ -1,19 +1,57 @@
 export interface BurnoutResult {
-  score: number;
+  totalScore: number;
+  categoryScores: {
+    exhaustion: number;
+    cynicism: number;
+    accomplishment: number;
+  };
   category: string;
   color: string;
   message: string;
   recommendations: string[];
 }
 
-export function calculateBurnoutScore(answers: number[]): BurnoutResult {
-  // Calculate total score - all questions are direct indicators now
-  const totalScore = answers.reduce((sum, answer) => sum + answer, 0);
+import { burnoutQuestions } from './burnoutQuestions';
 
-  // Adjusted scoring thresholds for more realistic results
-  if (totalScore <= 30) {
+export function calculateBurnoutScore(answers: number[]): BurnoutResult {
+  // Calculate weighted scores by category
+  let exhaustionScore = 0;
+  let cynicismScore = 0;
+  let accomplishmentScore = 0;
+  
+  answers.forEach((answer, index) => {
+    const question = burnoutQuestions[index];
+    const weightedAnswer = answer * question.weight;
+    
+    switch (question.category) {
+      case 'exhaustion':
+        exhaustionScore += weightedAnswer;
+        break;
+      case 'cynicism':
+        cynicismScore += weightedAnswer;
+        break;
+      case 'accomplishment':
+        accomplishmentScore += weightedAnswer;
+        break;
+    }
+  });
+
+  // Apply category weights: 탈진 40%, 냉소 35%, 성취감 25%
+  const totalScore = Math.round(
+    (exhaustionScore * 0.4) + (cynicismScore * 0.35) + (accomplishmentScore * 0.25)
+  );
+
+  const categoryScores = {
+    exhaustion: Math.round(exhaustionScore),
+    cynicism: Math.round(cynicismScore), 
+    accomplishment: Math.round(accomplishmentScore)
+  };
+
+  // Adjusted thresholds for 12 questions with weights (max ~84 points)
+  if (totalScore <= 25) {
     return {
-      score: totalScore,
+      totalScore,
+      categoryScores,
       category: "건강한 상태",
       color: "emerald",
       message: "좋아요! 일과 생활의 균형을 잘 유지하고 계시는 것 같아요. 스트레스 관리도 잘 되고 있고, 전반적으로 건강한 상태예요.",
@@ -24,9 +62,10 @@ export function calculateBurnoutScore(answers: number[]): BurnoutResult {
         "일과 휴식의 경계 명확히 하기"
       ]
     };
-  } else if (totalScore <= 50) {
+  } else if (totalScore <= 45) {
     return {
-      score: totalScore,
+      totalScore,
+      categoryScores,
       category: "가벼운 번아웃",
       color: "amber",
       message: "살짝 피로가 쌓이고 있는 것 같아요. 일상에서 느끼는 스트레스가 조금씩 누적되고 있을 수 있어요. 지금부터 관리하면 충분히 회복 가능해요.",
@@ -40,7 +79,8 @@ export function calculateBurnoutScore(answers: number[]): BurnoutResult {
     };
   } else {
     return {
-      score: totalScore,
+      totalScore,
+      categoryScores,
       category: "심한 번아웃",
       color: "red",
       message: "번아웃 증상이 꽤 심한 편이에요. 일상생활과 업무에 상당한 영향을 미치고 있을 것 같아요. 혼자서 해결하려 하지 말고 적극적으로 도움을 받으시길 권해요.",
