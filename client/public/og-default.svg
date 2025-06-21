@@ -4,22 +4,74 @@
       <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
     </linearGradient>
+    <radialGradient id="glowGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:rgba(255,255,255,0.8);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" />
+    </radialGradient>
   </defs>
+  
+  <!-- Background -->
   <rect width="1200" height="630" fill="url(#gradient)"/>
-  <text x="600" y="200" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">번아웃 자가진단 테스트</text>
-  <text x="600" y="280" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle">내 상태 확인하기</text>
-  <text x="600" y="350" font-family="Arial, sans-serif" font-size="28" fill="white" text-anchor="middle">MBI 기반 과학적 진단 • 12문항 2분 완료</text>
-  <circle cx="450" cy="450" r="40" fill="rgba(255,255,255,0.9)"/>
-  <circle cx="435" cy="435" r="5" fill="#6366f1"/>
-  <circle cx="465" cy="435" r="5" fill="#6366f1"/>
-  <path d="M 435 470 Q 450 480 465 470" stroke="#6366f1" stroke-width="3" fill="none"/>
-  <circle cx="600" cy="450" r="40" fill="rgba(255,255,255,0.9)"/>
-  <circle cx="585" cy="435" r="5" fill="#6366f1"/>
-  <circle cx="615" cy="435" r="5" fill="#6366f1"/>
-  <line x1="585" y1="465" x2="615" y2="465" stroke="#6366f1" stroke-width="3"/>
-  <circle cx="750" cy="450" r="40" fill="rgba(255,255,255,0.9)"/>
-  <circle cx="735" cy="435" r="5" fill="#6366f1"/>
-  <circle cx="765" cy="435" r="5" fill="#6366f1"/>
-  <path d="M 735 460 Q 750 470 765 460" stroke="#6366f1" stroke-width="3" fill="none"/>
-  <text x="600" y="570" font-family="Arial, sans-serif" font-size="24" fill="rgba(255,255,255,0.8)" text-anchor="middle">burnout-check.site</text>
+  
+  <!-- Floating particles -->
+  <circle cx="150" cy="100" r="3" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="300" cy="150" r="2" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="900" cy="120" r="4" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="1050" cy="180" r="2" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="200" cy="500" r="3" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="1000" cy="480" r="3" fill="rgba(255,255,255,0.4)"/>
+  
+  <!-- Central Brain Icon -->
+  <g transform="translate(600, 315)">
+    <!-- Brain outline -->
+    <path d="M -80 -60 Q -100 -80 -80 -100 Q -40 -120 0 -100 Q 40 -120 80 -100 Q 100 -80 80 -60 Q 90 -40 80 -20 Q 100 0 80 20 Q 90 40 80 60 Q 40 80 0 60 Q -40 80 -80 60 Q -90 40 -80 20 Q -100 0 -80 -20 Q -90 -40 -80 -60 Z" 
+          fill="rgba(255,255,255,0.9)" 
+          stroke="rgba(255,255,255,1)" 
+          stroke-width="2"/>
+    
+    <!-- Brain divisions -->
+    <path d="M 0 -100 Q 0 -80 0 -60 Q 0 -40 0 -20 Q 0 0 0 20 Q 0 40 0 60" 
+          stroke="rgba(99,102,241,0.3)" 
+          stroke-width="2" 
+          fill="none"/>
+    
+    <!-- Left hemisphere details -->
+    <path d="M -60 -40 Q -40 -50 -20 -40" 
+          stroke="rgba(99,102,241,0.4)" 
+          stroke-width="1.5" 
+          fill="none"/>
+    <path d="M -60 0 Q -40 -10 -20 0" 
+          stroke="rgba(99,102,241,0.4)" 
+          stroke-width="1.5" 
+          fill="none"/>
+    <path d="M -60 40 Q -40 30 -20 40" 
+          stroke="rgba(99,102,241,0.4)" 
+          stroke-width="1.5" 
+          fill="none"/>
+    
+    <!-- Right hemisphere details -->
+    <path d="M 20 -40 Q 40 -50 60 -40" 
+          stroke="rgba(236,72,153,0.4)" 
+          stroke-width="1.5" 
+          fill="none"/>
+    <path d="M 20 0 Q 40 -10 60 0" 
+          stroke="rgba(236,72,153,0.4)" 
+          stroke-width="1.5" 
+          fill="none"/>
+    <path d="M 20 40 Q 40 30 60 40" 
+          stroke="rgba(236,72,153,0.4)" 
+          stroke-width="1.5" 
+          fill="none"/>
+    
+    <!-- Glow effect -->
+    <ellipse cx="0" cy="0" rx="120" ry="100" fill="url(#glowGradient)" opacity="0.3"/>
+  </g>
+  
+  <!-- Subtle geometric patterns -->
+  <g opacity="0.1">
+    <polygon points="100,100 120,80 140,100 120,120" fill="white"/>
+    <polygon points="1060,500 1080,480 1100,500 1080,520" fill="white"/>
+    <circle cx="250" cy="400" r="8" fill="none" stroke="white" stroke-width="1"/>
+    <circle cx="950" cy="200" r="6" fill="none" stroke="white" stroke-width="1"/>
+  </g>
 </svg>
