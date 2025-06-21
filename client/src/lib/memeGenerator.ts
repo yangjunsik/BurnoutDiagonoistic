@@ -74,165 +74,149 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: n
   ctx.closePath();
 }
 
-function drawCuteCharacter(ctx: CanvasRenderingContext2D, x: number, y: number, mood: string) {
-  // 몸통 그리기 (투박하게)
+function drawSimpleFace(ctx: CanvasRenderingContext2D, x: number, y: number, mood: string) {
+  // 얼굴만 그리기 (투박하고 개웃긴 스타일)
   ctx.fillStyle = '#ffffff';
   ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 5;
+  
+  // 불규칙한 얼굴 원 (개판친 그림체)
+  ctx.beginPath();
+  // 투박하게 그린 원 모양
+  ctx.moveTo(x - 80, y - 20);
+  ctx.lineTo(x - 75, y - 60);
+  ctx.lineTo(x - 50, y - 80);
+  ctx.lineTo(x - 10, y - 85);
+  ctx.lineTo(x + 20, y - 80);
+  ctx.lineTo(x + 55, y - 60);
+  ctx.lineTo(x + 80, y - 20);
+  ctx.lineTo(x + 75, y + 30);
+  ctx.lineTo(x + 50, y + 70);
+  ctx.lineTo(x + 10, y + 80);
+  ctx.lineTo(x - 20, y + 75);
+  ctx.lineTo(x - 60, y + 50);
+  ctx.lineTo(x - 80, y + 10);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // 눈 그리기 (상태별로 다르게)
+  ctx.fillStyle = '#000000';
+  ctx.strokeStyle = '#000000';
   ctx.lineWidth = 4;
   
-  // 몸통 (불규칙한 타원)
-  ctx.beginPath();
-  ctx.ellipse(x, y + 80, 50, 70, 0, 0, 2 * Math.PI);
-  ctx.fill();
-  ctx.stroke();
-
-  // 얼굴 (투박한 원)
-  ctx.beginPath();
-  ctx.ellipse(x, y, 70, 65, 0, 0, 2 * Math.PI);
-  ctx.fill();
-  ctx.stroke();
-
-  // 팔 그리기 (투박한 선)
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 6;
-  ctx.lineCap = 'round';
-  
-  if (mood === "happy" || mood === "cheerful") {
-    // 기쁠 때 - 팔 위로
-    ctx.beginPath();
-    ctx.moveTo(x - 50, y + 60);
-    ctx.lineTo(x - 80, y + 30);
-    ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(x + 50, y + 60);
-    ctx.lineTo(x + 80, y + 30);
-    ctx.stroke();
-  } else if (mood === "stressed" || mood === "broken") {
-    // 스트레스 받을 때 - 팔 아래로
-    ctx.beginPath();
-    ctx.moveTo(x - 50, y + 80);
-    ctx.lineTo(x - 70, y + 120);
-    ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(x + 50, y + 80);
-    ctx.lineTo(x + 70, y + 120);
-    ctx.stroke();
-  } else {
-    // 보통 - 팔 옆으로
-    ctx.beginPath();
-    ctx.moveTo(x - 50, y + 70);
-    ctx.lineTo(x - 85, y + 85);
-    ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(x + 50, y + 70);
-    ctx.lineTo(x + 85, y + 85);
-    ctx.stroke();
-  }
-
-  // 다리 그리기 (투박하게)
-  ctx.beginPath();
-  ctx.moveTo(x - 25, y + 140);
-  ctx.lineTo(x - 35, y + 180);
-  ctx.stroke();
-  
-  ctx.beginPath();
-  ctx.moveTo(x + 25, y + 140);
-  ctx.lineTo(x + 35, y + 180);
-  ctx.stroke();
-
-  // 눈 그리기 (감정별로)
-  ctx.fillStyle = '#000000';
-  
   if (mood === "happy") {
-    // 웃는 눈 (^_^)
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 3;
+    // 완전 행복한 눈 (^_^)
     ctx.beginPath();
-    ctx.arc(x - 20, y - 10, 8, 0.2, Math.PI - 0.2);
+    ctx.arc(x - 25, y - 20, 12, 0.2, Math.PI - 0.2);
     ctx.stroke();
     ctx.beginPath();
-    ctx.arc(x + 20, y - 10, 8, 0.2, Math.PI - 0.2);
+    ctx.arc(x + 25, y - 20, 12, 0.2, Math.PI - 0.2);
     ctx.stroke();
+  } else if (mood === "cheerful") {
+    // 기분 좋은 눈 (●‿●)
+    ctx.beginPath();
+    ctx.arc(x - 25, y - 20, 6, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 25, y - 20, 6, 0, 2 * Math.PI);
+    ctx.fill();
   } else if (mood === "broken" || mood === "stressed") {
-    // X눈 (죽음)
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 4;
+    // X눈 (완전 죽음)
+    ctx.lineWidth = 5;
     // 왼쪽 X
     ctx.beginPath();
-    ctx.moveTo(x - 28, y - 18);
-    ctx.lineTo(x - 12, y - 2);
+    ctx.moveTo(x - 35, y - 30);
+    ctx.lineTo(x - 15, y - 10);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(x - 12, y - 18);
-    ctx.lineTo(x - 28, y - 2);
+    ctx.moveTo(x - 15, y - 30);
+    ctx.lineTo(x - 35, y - 10);
     ctx.stroke();
     // 오른쪽 X
     ctx.beginPath();
-    ctx.moveTo(x + 12, y - 18);
-    ctx.lineTo(x + 28, y - 2);
+    ctx.moveTo(x + 15, y - 30);
+    ctx.lineTo(x + 35, y - 10);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(x + 28, y - 18);
-    ctx.lineTo(x + 12, y - 2);
+    ctx.moveTo(x + 35, y - 30);
+    ctx.lineTo(x + 15, y - 10);
+    ctx.stroke();
+  } else if (mood === "tired") {
+    // 반쯤 감은 눈 (-_-)
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(x - 35, y - 20);
+    ctx.lineTo(x - 15, y - 20);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x + 15, y - 20);
+    ctx.lineTo(x + 35, y - 20);
     ctx.stroke();
   } else {
-    // 일반 눈
+    // 일반 눈 (●_●)
     ctx.beginPath();
-    ctx.arc(x - 20, y - 10, 5, 0, 2 * Math.PI);
+    ctx.arc(x - 25, y - 20, 5, 0, 2 * Math.PI);
     ctx.fill();
-    
     ctx.beginPath();
-    ctx.arc(x + 20, y - 10, 5, 0, 2 * Math.PI);
+    ctx.arc(x + 25, y - 20, 5, 0, 2 * Math.PI);
     ctx.fill();
   }
 
-  // 입 그리기 (감정별로)
+  // 입 그리기 (상태별로 다르게)
   ctx.strokeStyle = '#000000';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 5;
   ctx.lineCap = 'round';
   
-  if (mood === "happy" || mood === "cheerful") {
-    // 웃는 입
+  if (mood === "happy") {
+    // 완전 행복한 입 (엄청 웃음)
     ctx.beginPath();
-    ctx.arc(x, y + 15, 25, 0, Math.PI);
+    ctx.arc(x, y + 20, 35, 0, Math.PI);
+    ctx.stroke();
+  } else if (mood === "cheerful") {
+    // 살짝 웃는 입
+    ctx.beginPath();
+    ctx.arc(x, y + 20, 25, 0.3, Math.PI - 0.3);
     ctx.stroke();
   } else if (mood === "broken" || mood === "stressed") {
-    // 슬픈 입 (뒤집힌 웃음)
+    // 완전 슬픈 입 (ㅠㅠ)
     ctx.beginPath();
-    ctx.arc(x, y + 35, 20, Math.PI, 2 * Math.PI);
+    ctx.arc(x, y + 50, 25, Math.PI, 2 * Math.PI);
     ctx.stroke();
   } else if (mood === "tired") {
-    // 비틀린 입
+    // 삐뚤어진 입
     ctx.beginPath();
-    ctx.moveTo(x - 15, y + 20);
-    ctx.quadraticCurveTo(x, y + 30, x + 15, y + 15);
+    ctx.moveTo(x - 20, y + 30);
+    ctx.quadraticCurveTo(x, y + 40, x + 15, y + 25);
     ctx.stroke();
   } else {
     // 일자 입
     ctx.beginPath();
-    ctx.moveTo(x - 15, y + 20);
-    ctx.lineTo(x + 15, y + 20);
+    ctx.moveTo(x - 20, y + 30);
+    ctx.lineTo(x + 20, y + 30);
     ctx.stroke();
   }
 
-  // 홍조/땀방울 추가
+  // 추가 효과 (상태에 따라)
   if (mood === "stressed" || mood === "tired") {
-    ctx.fillStyle = '#ff9999';
+    // 홍조
+    ctx.fillStyle = 'rgba(255, 153, 153, 0.7)';
     ctx.beginPath();
-    ctx.arc(x - 55, y + 5, 8, 0, 2 * Math.PI);
+    ctx.ellipse(x - 65, y + 10, 12, 8, 0, 0, 2 * Math.PI);
     ctx.fill();
-    
     ctx.beginPath();
-    ctx.arc(x + 55, y + 5, 8, 0, 2 * Math.PI);
+    ctx.ellipse(x + 65, y + 10, 12, 8, 0, 0, 2 * Math.PI);
     ctx.fill();
-    
-    // 땀방울
+  }
+  
+  if (mood === "broken") {
+    // 눈물 ㅠㅠ
     ctx.fillStyle = '#87ceeb';
     ctx.beginPath();
-    ctx.arc(x - 45, y - 25, 4, 0, 2 * Math.PI);
+    ctx.ellipse(x - 20, y + 5, 3, 8, 0, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(x + 20, y + 5, 3, 8, 0, 0, 2 * Math.PI);
     ctx.fill();
   }
 }
@@ -253,8 +237,8 @@ export function generateMemeImage(results: BurnoutResult, personalizedComment: s
     // 메인 캐릭터와 상태 표시
     const character = getMemeCharacter(results.totalScore);
     
-    // 투박한 캐릭터 그리기 (얼굴 + 몸)
-    drawCuteCharacter(ctx, canvas.width / 2, 150, character.mood);
+    // 투박한 얼굴만 그리기 (순수 개웃긴 스타일)
+    drawSimpleFace(ctx, canvas.width / 2, 200, character.mood);
 
     // 투박한 말풍선 배경
     ctx.fillStyle = '#ffffff';

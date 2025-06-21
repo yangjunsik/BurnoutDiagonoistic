@@ -358,7 +358,7 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
               className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
             >
               <ImageIcon className="w-4 h-4 mr-2" />
-              밈 이미지 다운로드
+              내얼굴 다운로드
             </Button>
 
             <Button
