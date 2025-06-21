@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { answerOptions } from "@/lib/burnoutQuestions";
+import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
 
 interface BurnoutQuestionProps {
   question: string;
@@ -33,27 +34,27 @@ export default function BurnoutQuestion({
   const progressPercent = (questionNumber / totalQuestions) * 100;
 
   return (
-    <div className="min-h-screen p-4 py-8">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen p-4 py-8 bg-gradient-to-br from-gray-50 to-white">
+      <div className="max-w-lg mx-auto">
         {/* Progress Bar */}
         <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-600">진행률</span>
-            <span className="text-sm font-medium text-blue-600">
-              {questionNumber} / {totalQuestions}
-            </span>
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm font-medium text-gray-500">{questionNumber} / {totalQuestions}</span>
+            <span className="text-sm font-medium text-gray-900">{Math.round(progressPercent)}%</span>
           </div>
-          <Progress value={progressPercent} className="h-2" />
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
         </div>
 
         {/* Question Card */}
-        <Card className="shadow-xl animate-slide-up">
+        <Card className="border-0 shadow-2xl rounded-3xl animate-slide-up mb-6">
           <CardContent className="p-8">
             <div className="text-center mb-8">
-              <span className="inline-block bg-blue-100 text-blue-600 text-sm font-medium px-3 py-1 rounded-full mb-4">
-                질문 {questionNumber}
-              </span>
-              <h2 className="text-xl font-semibold text-gray-900 leading-relaxed">
+              <h2 className="text-xl font-medium text-black leading-relaxed">
                 {question}
               </h2>
             </div>
@@ -63,56 +64,57 @@ export default function BurnoutQuestion({
               {answerOptions.map((option) => (
                 <div
                   key={option.value}
-                  className={`bg-gray-50 hover:bg-blue-50 border-2 rounded-xl p-4 cursor-pointer transition-all duration-200 ${
+                  className={`border-2 rounded-2xl p-4 cursor-pointer transition-all duration-200 ${
                     currentAnswer === option.value
-                      ? "bg-blue-100 border-blue-300"
-                      : "border-transparent hover:border-blue-200"
+                      ? "bg-black text-white border-black"
+                      : "bg-white border-gray-200 hover:border-gray-300 text-gray-700"
                   }`}
                   onClick={() => onAnswer(option.value)}
                 >
-                  <div className="flex items-center">
-                    <div className="w-5 h-5 border-2 border-gray-300 rounded-full mr-3 flex items-center justify-center">
-                      {currentAnswer === option.value && (
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      )}
-                    </div>
-                    <span className="font-medium text-gray-800">{option.label}</span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{option.label}</span>
+                    {currentAnswer === option.value && (
+                      <CheckCircle className="w-5 h-5" />
+                    )}
                   </div>
                 </div>
               ))}
             </div>
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-between">
-              <Button
-                onClick={onPrevious}
-                disabled={!canGoPrevious}
-                variant="outline"
-                className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl transition-all duration-200"
-              >
-                이전
-              </Button>
-              
-              {isLastQuestion ? (
-                <Button
-                  onClick={onShowResults}
-                  disabled={!canGoNext}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200"
-                >
-                  결과 보기
-                </Button>
-              ) : (
-                <Button
-                  onClick={onNext}
-                  disabled={!canGoNext}
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200"
-                >
-                  다음
-                </Button>
-              )}
-            </div>
           </CardContent>
         </Card>
+
+        {/* Navigation Buttons */}
+        <div className="flex justify-between gap-4">
+          <Button
+            onClick={onPrevious}
+            disabled={!canGoPrevious}
+            variant="outline"
+            className="flex-1 bg-white border-gray-300 text-gray-700 font-medium py-4 rounded-2xl transition-all duration-200 disabled:opacity-50"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            이전
+          </Button>
+          
+          {isLastQuestion ? (
+            <Button
+              onClick={onShowResults}
+              disabled={!canGoNext}
+              className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-200 disabled:opacity-50"
+            >
+              <CheckCircle className="w-4 h-4 mr-2" />
+              완료
+            </Button>
+          ) : (
+            <Button
+              onClick={onNext}
+              disabled={!canGoNext}
+              className="flex-1 bg-black hover:bg-gray-900 text-white font-medium py-4 rounded-2xl transition-all duration-200 disabled:opacity-50"
+            >
+              다음
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
