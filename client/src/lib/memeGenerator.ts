@@ -28,7 +28,7 @@ function getMemeItem(totalScore: number): { category: string; item: string; mess
     // 심한 번아웃 - 극단적인 해결책들
     category = "severe";
     items = [
-      { item: "소주", message: "한잔해", emoji: "🍶" },
+      { item: "소주", message: "한잔해", emoji: "🍾" },
       { item: "담배", message: "니코틴이 나를 부른다", emoji: "🚬" },
       { item: "돈", message: "돈이면 다 해결될 것 같은데", emoji: "💰" },
       { item: "사표", message: "이딴 회사 때려치겠어", emoji: "📝" },
