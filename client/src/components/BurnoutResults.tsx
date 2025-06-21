@@ -338,7 +338,7 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
           {memeImageUrl && (
             <Card className="border-0 shadow-lg rounded-3xl mb-6">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-black mb-4 text-center">내 번아웃 밈</h3>
+                <h3 className="font-semibold text-black mb-4 text-center">내 얼굴</h3>
                 <div className="flex justify-center">
                   <img 
                     src={memeImageUrl} 
