@@ -60,13 +60,13 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
   const getBgGradient = () => {
     switch (results.color) {
       case "emerald":
-        return "bg-gradient-to-br from-purple-500 to-purple-600";
+        return "bg-gradient-to-br from-purple-500 to-pink-500";
       case "amber":
-        return "bg-gradient-to-br from-purple-500 to-purple-600";
+        return "bg-gradient-to-br from-purple-500 to-pink-500";
       case "red":
-        return "bg-gradient-to-br from-purple-500 to-purple-600";
+        return "bg-gradient-to-br from-purple-500 to-pink-500";
       default:
-        return "bg-gradient-to-br from-purple-500 to-purple-600";
+        return "bg-gradient-to-br from-purple-500 to-pink-500";
     }
   };
 
@@ -175,14 +175,14 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
           results.categoryScores.accomplishment
         ],
         backgroundColor: [
-          'rgba(139, 92, 246, 0.8)',  // purple-500
-          'rgba(124, 58, 237, 0.8)',  // purple-600  
-          'rgba(109, 40, 217, 0.8)'   // purple-700
+          'rgba(75, 85, 99, 0.8)',    // gray-600
+          'rgba(107, 114, 128, 0.8)', // gray-500  
+          'rgba(156, 163, 175, 0.8)'  // gray-400
         ],
         borderColor: [
-          'rgba(139, 92, 246, 1)',
-          'rgba(124, 58, 237, 1)',
-          'rgba(109, 40, 217, 1)'
+          'rgba(75, 85, 99, 1)',
+          'rgba(107, 114, 128, 1)',
+          'rgba(156, 163, 175, 1)'
         ],
         borderWidth: 2,
         borderRadius: 8,
@@ -264,17 +264,17 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
             </div>
             <div className="grid grid-cols-3 gap-4 mt-4 text-xs text-center">
               <div>
-                <div className="w-4 h-4 bg-purple-500 rounded mx-auto mb-1"></div>
+                <div className="w-4 h-4 bg-gray-600 rounded mx-auto mb-1"></div>
                 <div className="font-medium text-gray-700">정서적 탈진</div>
                 <div className="text-gray-500">{results.categoryScores.exhaustion}점</div>
               </div>
               <div>
-                <div className="w-4 h-4 bg-purple-600 rounded mx-auto mb-1"></div>
+                <div className="w-4 h-4 bg-gray-500 rounded mx-auto mb-1"></div>
                 <div className="font-medium text-gray-700">냉소적 태도</div>
                 <div className="text-gray-500">{results.categoryScores.cynicism}점</div>
               </div>
               <div>
-                <div className="w-4 h-4 bg-purple-700 rounded mx-auto mb-1"></div>
+                <div className="w-4 h-4 bg-gray-400 rounded mx-auto mb-1"></div>
                 <div className="font-medium text-gray-700">성취감 감소</div>
                 <div className="text-gray-500">{results.categoryScores.accomplishment}점</div>
               </div>
@@ -307,7 +307,7 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
           <Button
             onClick={shareWithImage}
             disabled={isGeneratingImage}
-            className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
           >
             {isGeneratingImage ? (
               <>

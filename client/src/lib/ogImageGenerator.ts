@@ -15,10 +15,10 @@ export function generateOGImage(results: BurnoutResult): Promise<string> {
     canvas.height = 630;
 
     // 배경 그라데이션
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    gradient.addColorStop(0, '#f8fafc');
-    gradient.addColorStop(1, '#e2e8f0');
-    ctx.fillStyle = gradient;
+    const backgroundGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    backgroundGradient.addColorStop(0, '#f8fafc');
+    backgroundGradient.addColorStop(1, '#e2e8f0');
+    ctx.fillStyle = backgroundGradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // 메인 카드 배경
@@ -41,8 +41,11 @@ export function generateOGImage(results: BurnoutResult): Promise<string> {
     ctx.textAlign = 'center';
     ctx.fillText('번아웃 체크 결과', canvas.width / 2, 180);
 
-    // 점수 원형 배경 - 보라색 포인트 컬러
-    ctx.fillStyle = '#8b5cf6'; // purple-500
+    // 점수 원형 배경 - 그라데이션 효과 (보라-핑크)
+    const scoreGradient = ctx.createLinearGradient(canvas.width / 2 - 80, 240, canvas.width / 2 + 80, 400);
+    scoreGradient.addColorStop(0, '#8b5cf6'); // purple-500
+    scoreGradient.addColorStop(1, '#ec4899'); // pink-500
+    ctx.fillStyle = scoreGradient;
     ctx.beginPath();
     ctx.arc(canvas.width / 2, 320, 80, 0, 2 * Math.PI);
     ctx.fill();
