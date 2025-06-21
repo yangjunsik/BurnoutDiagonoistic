@@ -14,37 +14,34 @@ export interface BurnoutResult {
 import { burnoutQuestions } from './burnoutQuestions';
 
 export function calculateBurnoutScore(answers: number[]): BurnoutResult {
-  // Calculate weighted scores by category
+  // Calculate simple sum - each answer is 1-6 points
   let exhaustionScore = 0;
   let cynicismScore = 0;
   let accomplishmentScore = 0;
   
   answers.forEach((answer, index) => {
     const question = burnoutQuestions[index];
-    const weightedAnswer = answer * question.weight;
     
     switch (question.category) {
       case 'exhaustion':
-        exhaustionScore += weightedAnswer;
+        exhaustionScore += answer;
         break;
       case 'cynicism':
-        cynicismScore += weightedAnswer;
+        cynicismScore += answer;
         break;
       case 'accomplishment':
-        accomplishmentScore += weightedAnswer;
+        accomplishmentScore += answer;
         break;
     }
   });
 
-  // Apply category weights: 탈진 40%, 냉소 35%, 성취감 25%
-  const totalScore = Math.round(
-    (exhaustionScore * 0.4) + (cynicismScore * 0.35) + (accomplishmentScore * 0.25)
-  );
+  // Simple total score: just sum all answers (max = 12 × 6 = 72)
+  const totalScore = exhaustionScore + cynicismScore + accomplishmentScore;
 
   const categoryScores = {
-    exhaustion: Math.round(exhaustionScore),
-    cynicism: Math.round(cynicismScore), 
-    accomplishment: Math.round(accomplishmentScore)
+    exhaustion: exhaustionScore,
+    cynicism: cynicismScore, 
+    accomplishment: accomplishmentScore
   };
 
   // 12 questions × 6 points = max 72 points
