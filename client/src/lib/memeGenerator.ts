@@ -9,10 +9,11 @@ function getMemeItem(totalScore: number): { category: string; item: string; mess
     category = "healthy";
     items = [
       { item: "아메리카노", message: "여유로운 직장인의 필수템", emoji: "☕" },
-      { item: "운동", message: "몸짱이 되어보자구", emoji: "🏃‍♂️" },
+      { item: "운동", message: "애인 만드셔야지", emoji: "🏃‍♂️" },
       { item: "독서", message: "지적인 척하기", emoji: "📚" },
       { item: "친구들과 만남", message: "사회적 동물의 본능", emoji: "👥" },
-      { item: "취미생활", message: "인생의 스파이스", emoji: "🎨" }
+      { item: "취미생활", message: "인생의 스파이스", emoji: "🎨" },
+      { item: "애인", message: "제발 이번년도는..", emoji: "💕" }
     ];
   } else if (totalScore <= 48) {
     // 가벼운 번아웃 - 스트레스 해소 아이템들
@@ -20,9 +21,10 @@ function getMemeItem(totalScore: number): { category: string; item: string; mess
     items = [
       { item: "꿀잠", message: "12시간은 기본이지", emoji: "😴" },
       { item: "치킨", message: "스트레스엔 역시 치킨이야", emoji: "🍗" },
-      { item: "맥주", message: "오늘도 수고했어", emoji: "🍺" },
+      { item: "맥주", message: "캬 이거지", emoji: "🍺" },
       { item: "넷플릭스", message: "현실도피 1등급", emoji: "📺" },
-      { item: "센드벡", message: "누군가를 떠올려보자", emoji: "🥊" }
+      { item: "센드벡", message: "누군가를 떠올려보자", emoji: "🥊" },
+      { item: "복권", message: "이번엔 진짜 될 것 같은데", emoji: "🎫" }
     ];
   } else {
     // 심한 번아웃 - 극단적인 해결책들
@@ -30,9 +32,10 @@ function getMemeItem(totalScore: number): { category: string; item: string; mess
     items = [
       { item: "소주", message: "한잔해", emoji: "🍾" },
       { item: "담배", message: "니코틴이 나를 부른다", emoji: "🚬" },
-      { item: "돈", message: "돈이면 다 해결될 것 같은데", emoji: "💰" },
-      { item: "사표", message: "이딴 회사 때려치겠어", emoji: "📝" },
-      { item: "무인도", message: "다 때려치고 도망가자", emoji: "🏝️" }
+      { item: "돈", message: "돈좀 주세요", emoji: "💰" },
+      { item: "사표", message: "보여줄께 완전히 달라진나", emoji: "📝" },
+      { item: "무인도", message: "원합니다 내가 살기 위해서", emoji: "🏝️" },
+      { item: "로또", message: "인생역전 한방!", emoji: "🎰" }
     ];
   }
   
