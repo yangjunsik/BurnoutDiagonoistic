@@ -7,41 +7,35 @@ export interface BurnoutResult {
 }
 
 export function calculateBurnoutScore(answers: number[]): BurnoutResult {
-  // Calculate total score
-  // Questions 12-15 (indices 11-14) are reverse scored (positive indicators)
-  const totalScore = answers.reduce((sum, answer, index) => {
-    if (index >= 11 && index <= 14) {
-      return sum + (6 - answer);
-    }
-    return sum + answer;
-  }, 0);
+  // Calculate total score - all questions are direct indicators now
+  const totalScore = answers.reduce((sum, answer) => sum + answer, 0);
 
-  // Determine category and recommendations
-  if (totalScore <= 20) {
+  // Adjusted scoring thresholds for more realistic results
+  if (totalScore <= 30) {
     return {
       score: totalScore,
       category: "건강한 상태",
       color: "emerald",
-      message: "좋아요! 현재 건강한 상태를 유지하고 계세요. 일과 생활의 균형이 잘 맞춰져 있고, 에너지 수준도 괜찮은 편이에요.",
+      message: "좋아요! 일과 생활의 균형을 잘 유지하고 계시는 것 같아요. 스트레스 관리도 잘 되고 있고, 전반적으로 건강한 상태예요.",
       recommendations: [
-        "지금처럼 좋은 루틴 유지하기",
-        "꾸준한 운동과 충분한 휴식",
-        "나만의 스트레스 해소법 찾기",
-        "소중한 사람들과의 시간 갖기"
+        "현재 패턴 그대로 유지하기",
+        "가끔 번아웃 체크해보기",
+        "스트레스 쌓이기 전에 미리 해소하기",
+        "일과 휴식의 경계 명확히 하기"
       ]
     };
-  } else if (totalScore <= 35) {
+  } else if (totalScore <= 50) {
     return {
       score: totalScore,
       category: "가벼운 번아웃",
       color: "amber",
-      message: "조금 피곤하신 것 같아요. 최근에 스트레스를 받거나 무리한 일이 있으셨나요? 지금이 자신을 돌아보고 케어할 좋은 시기에요.",
+      message: "살짝 피로가 쌓이고 있는 것 같아요. 일상에서 느끼는 스트레스가 조금씩 누적되고 있을 수 있어요. 지금부터 관리하면 충분히 회복 가능해요.",
       recommendations: [
-        "일하는 시간 조금 줄여보기",
-        "중간중간 짧은 휴식 챙기기",
-        "스트레스 풀 수 있는 방법 찾기",
-        "믿을 만한 사람과 이야기하기",
-        "잠과 식사 잘 챙기기"
+        "업무 중 5-10분 휴식 자주 가지기",
+        "퇴근 후 일 생각 안 하는 시간 만들기",
+        "좋아하는 취미나 운동 시간 늘리기",
+        "주변 사람들과 스트레스 나누기",
+        "수면 패턴 규칙적으로 맞추기"
       ]
     };
   } else {
@@ -49,13 +43,13 @@ export function calculateBurnoutScore(answers: number[]): BurnoutResult {
       score: totalScore,
       category: "심한 번아웃",
       color: "red",
-      message: "많이 힘드시겠어요. 요즘 정말 지치고 의욕이 없으신 것 같네요. 혼자 견디지 마시고 주변에 도움을 요청하는 것도 좋은 방법이에요.",
+      message: "번아웃 증상이 꽤 심한 편이에요. 일상생활과 업무에 상당한 영향을 미치고 있을 것 같아요. 혼자서 해결하려 하지 말고 적극적으로 도움을 받으시길 권해요.",
       recommendations: [
-        "전문가와 상담해보시길 권해요",
-        "지금은 충분한 휴식이 필요해요",
-        "일하는 환경 바꿔볼 수 있다면 좋겠어요",
-        "가족이나 친구들에게 도움 요청하기",
-        "잠시 일을 쉬는 것도 고려해보세요"
+        "심리 상담이나 전문가 도움 받기",
+        "당분간 업무 강도 조절하기",
+        "연차나 휴가 활용해서 충분히 쉬기",
+        "가족, 친구들에게 상황 털어놓기",
+        "필요하다면 직장 환경 변화 고려하기"
       ]
     };
   }
