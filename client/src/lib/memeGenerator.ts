@@ -22,7 +22,7 @@ function getMemeItem(totalScore: number): { category: string; item: string; mess
       { item: "치킨", message: "스트레스엔 역시 치킨이야", emoji: "🍗" },
       { item: "맥주", message: "오늘도 수고했어", emoji: "🍺" },
       { item: "넷플릭스", message: "현실도피 1등급", emoji: "📺" },
-      { item: "센드벡", message: "머리가 아파서 그래", emoji: "💊" }
+      { item: "센드벡", message: "누군가를 떠올려보자", emoji: "🥊" }
     ];
   } else {
     // 심한 번아웃 - 극단적인 해결책들
