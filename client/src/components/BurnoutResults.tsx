@@ -338,7 +338,7 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
           {memeImageUrl && (
             <Card className="border-0 shadow-lg rounded-3xl mb-6">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-black mb-4 text-center">내 얼굴</h3>
+                <h3 className="font-semibold text-black mb-4 text-center">내게 필요한건?</h3>
                 <div className="flex justify-center">
                   <img 
                     src={memeImageUrl} 
@@ -358,7 +358,7 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
               className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
             >
               <ImageIcon className="w-4 h-4 mr-2" />
-              내얼굴 다운로드
+              내게 필요한건 다운로드
             </Button>
 
             <Button

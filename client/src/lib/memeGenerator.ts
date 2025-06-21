@@ -1,43 +1,48 @@
 import { BurnoutResult } from './burnoutScoring';
 
-function getMemeCharacter(totalScore: number): { mood: string; message: string; comment: string } {
-  if (totalScore <= 20) {
-    return {
-      mood: "happy",
-      message: "ㅋㅋ 나 개꿀잼",
-      comment: "멘탈갑 인정? 진짜 럭키비키자나"
-    };
-  } else if (totalScore <= 30) {
-    return {
-      mood: "cheerful", 
-      message: "아직 괜찮긴 한데",
-      comment: "이정도면 ㄱㅊ? 아직 살만해"
-    };
-  } else if (totalScore <= 40) {
-    return {
-      mood: "neutral",
-      message: "음... 그냥저냥?",
-      comment: "뭔가 애매모호한 느낌이긴 함"
-    };
-  } else if (totalScore <= 50) {
-    return {
-      mood: "tired",
-      message: "어 뭔가 이상한데",
-      comment: "와 진짜 피곤해... 치킨 먹고 자야지"
-    };
-  } else if (totalScore <= 60) {
-    return {
-      mood: "stressed",
-      message: "야 나 힘들어ㅠㅠ",
-      comment: "퇴근하고 싶다... 집가고 싶어"
-    };
+function getMemeItem(totalScore: number): { category: string; item: string; message: string; emoji: string } {
+  let category: string;
+  let items: Array<{ item: string; message: string; emoji: string }>;
+  
+  if (totalScore <= 24) {
+    // 건강한 상태 - 여유로운 아이템들
+    category = "healthy";
+    items = [
+      { item: "아메리카노", message: "여유로운 하루를 위해", emoji: "☕" },
+      { item: "운동", message: "건강한 몸과 마음", emoji: "🏃‍♂️" },
+      { item: "독서", message: "지식을 쌓는 시간", emoji: "📚" },
+      { item: "친구들과 만남", message: "소중한 인연들", emoji: "👥" },
+      { item: "취미생활", message: "나만의 특별한 시간", emoji: "🎨" }
+    ];
+  } else if (totalScore <= 48) {
+    // 가벼운 번아웃 - 스트레스 해소 아이템들
+    category = "mild";
+    items = [
+      { item: "치킨", message: "스트레스엔 역시 치킨", emoji: "🍗" },
+      { item: "맥주", message: "하루의 끝은 맥주와 함께", emoji: "🍺" },
+      { item: "넷플릭스", message: "현실도피의 완벽한 수단", emoji: "📺" },
+      { item: "잠", message: "세상에서 가장 좋은 도피처", emoji: "😴" },
+      { item: "쇼핑", message: "돈은 없지만 기분전환", emoji: "🛒" }
+    ];
   } else {
-    return {
-      mood: "broken",
-      message: "나 진짜 망했다",
-      comment: "도망가고 싶어... 이 모든걸 던지고"
-    };
+    // 심한 번아웃 - 극단적인 해결책들
+    category = "severe";
+    items = [
+      { item: "소주", message: "현실을 잊게 해주는 친구", emoji: "🍶" },
+      { item: "담배", message: "스트레스 해소의 마지막 수단", emoji: "🚬" },
+      { item: "돈", message: "모든 문제의 해결책", emoji: "💰" },
+      { item: "휴가", message: "이 모든 걸 떠나고 싶어", emoji: "✈️" },
+      { item: "사표", message: "더 이상은 못 참겠어", emoji: "📝" }
+    ];
   }
+  
+  // 랜덤으로 하나 선택
+  const randomItem = items[Math.floor(Math.random() * items.length)];
+  
+  return {
+    category,
+    ...randomItem
+  };
 }
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
@@ -74,144 +79,12 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: n
   ctx.closePath();
 }
 
-function drawSimpleFace(ctx: CanvasRenderingContext2D, x: number, y: number, mood: string) {
-  // 짱구 스타일 얼굴 (살색 + 검은 테두리)
-  ctx.fillStyle = '#fdbcb4'; // 짱구 살색
-  ctx.strokeStyle = '#000000';
-  ctx.lineWidth = 3;
-  
-  // 둥근 얼굴 (짱구처럼)
-  ctx.beginPath();
-  ctx.arc(x, y, 60, 0, 2 * Math.PI);
-  ctx.fill();
-  ctx.stroke();
-
-  // 눈 그리기 (짱구 스타일)
-  ctx.fillStyle = '#000000';
-  ctx.strokeStyle = '#000000';
-  ctx.lineWidth = 2;
-  
-  if (mood === "happy") {
-    // 웃는 눈 (^_^) - 짱구처럼 간단하게
-    ctx.beginPath();
-    ctx.arc(x - 18, y - 15, 8, 0.3, Math.PI - 0.3);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(x + 18, y - 15, 8, 0.3, Math.PI - 0.3);
-    ctx.stroke();
-  } else if (mood === "cheerful") {
-    // 둥근 눈 (●●) - 짱구 기본 눈
-    ctx.beginPath();
-    ctx.arc(x - 18, y - 15, 4, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 18, y - 15, 4, 0, 2 * Math.PI);
-    ctx.fill();
-  } else if (mood === "broken" || mood === "stressed") {
-    // X눈 - 짱구가 기절했을 때
-    ctx.lineWidth = 3;
-    // 왼쪽 X
-    ctx.beginPath();
-    ctx.moveTo(x - 25, y - 22);
-    ctx.lineTo(x - 11, y - 8);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x - 11, y - 22);
-    ctx.lineTo(x - 25, y - 8);
-    ctx.stroke();
-    // 오른쪽 X
-    ctx.beginPath();
-    ctx.moveTo(x + 11, y - 22);
-    ctx.lineTo(x + 25, y - 8);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x + 25, y - 22);
-    ctx.lineTo(x + 11, y - 8);
-    ctx.stroke();
-  } else if (mood === "tired") {
-    // 반쯤 감은 눈 (-_-)
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(x - 25, y - 15);
-    ctx.lineTo(x - 11, y - 15);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x + 11, y - 15);
-    ctx.lineTo(x + 25, y - 15);
-    ctx.stroke();
-  } else {
-    // 일반 눈 (●●) - 기본 짱구 눈
-    ctx.beginPath();
-    ctx.arc(x - 18, y - 15, 4, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 18, y - 15, 4, 0, 2 * Math.PI);
-    ctx.fill();
-  }
-
-  // 입 그리기 (짱구 스타일)
-  ctx.strokeStyle = '#000000';
-  ctx.lineWidth = 3;
-  ctx.lineCap = 'round';
-  
-  if (mood === "happy") {
-    // 큰 웃음 (D 모양)
-    ctx.beginPath();
-    ctx.arc(x, y + 15, 20, 0, Math.PI);
-    ctx.stroke();
-  } else if (mood === "cheerful") {
-    // 작은 웃음
-    ctx.beginPath();
-    ctx.arc(x, y + 15, 12, 0.4, Math.PI - 0.4);
-    ctx.stroke();
-  } else if (mood === "broken" || mood === "stressed") {
-    // 슬픈 입 (역 D 모양)
-    ctx.beginPath();
-    ctx.arc(x, y + 35, 15, Math.PI, 2 * Math.PI);
-    ctx.stroke();
-  } else if (mood === "tired") {
-    // 물결 입 (~)
-    ctx.beginPath();
-    ctx.moveTo(x - 15, y + 20);
-    ctx.quadraticCurveTo(x - 5, y + 25, x + 5, y + 20);
-    ctx.quadraticCurveTo(x + 15, y + 15, x + 15, y + 20);
-    ctx.stroke();
-  } else {
-    // 일자 입
-    ctx.beginPath();
-    ctx.moveTo(x - 12, y + 20);
-    ctx.lineTo(x + 12, y + 20);
-    ctx.stroke();
-  }
-
-  // 홍조 (상태에 따라)
-  if (mood === "stressed" || mood === "tired") {
-    ctx.fillStyle = '#ff9999';
-    ctx.beginPath();
-    ctx.arc(x - 45, y + 5, 6, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 45, y + 5, 6, 0, 2 * Math.PI);
-    ctx.fill();
-  }
-  
-  // 눈물 (broken 상태일 때)
-  if (mood === "broken") {
-    ctx.fillStyle = '#87ceeb';
-    ctx.beginPath();
-    ctx.arc(x - 15, y + 5, 2, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 15, y + 5, 2, 0, 2 * Math.PI);
-    ctx.fill();
-    // 눈물 방울
-    ctx.beginPath();
-    ctx.arc(x - 15, y + 15, 3, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 15, y + 15, 3, 0, 2 * Math.PI);
-    ctx.fill();
-  }
+function drawItemIcon(ctx: CanvasRenderingContext2D, x: number, y: number, emoji: string) {
+  // 큰 이모지 아이콘 그리기
+  ctx.font = '120px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(emoji, x, y);
 }
 
 export function generateMemeImage(results: BurnoutResult, personalizedComment: string): Promise<string> {
@@ -227,11 +100,17 @@ export function generateMemeImage(results: BurnoutResult, personalizedComment: s
     ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 메인 캐릭터와 상태 표시
-    const character = getMemeCharacter(results.totalScore);
+    // 필요한 아이템 표시
+    const memeItem = getMemeItem(results.totalScore);
     
-    // 투박한 얼굴만 그리기 (순수 개웃긴 스타일)
-    drawSimpleFace(ctx, canvas.width / 2, 200, character.mood);
+    // 아이템 아이콘 그리기
+    drawItemIcon(ctx, canvas.width / 2, 180, memeItem.emoji);
+
+    // 상단 제목
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 32px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('내게 필요한건?', canvas.width / 2, 80);
 
     // 투박한 말풍선 배경
     ctx.fillStyle = '#ffffff';
@@ -240,42 +119,42 @@ export function generateMemeImage(results: BurnoutResult, personalizedComment: s
     
     // 불규칙한 말풍선
     ctx.beginPath();
-    ctx.moveTo(100, 380);
-    ctx.lineTo(500, 380);
-    ctx.lineTo(510, 390);
-    ctx.lineTo(500, 480);
-    ctx.lineTo(100, 475);
-    ctx.lineTo(95, 385);
+    ctx.moveTo(80, 320);
+    ctx.lineTo(520, 320);
+    ctx.lineTo(530, 330);
+    ctx.lineTo(520, 450);
+    ctx.lineTo(80, 445);
+    ctx.lineTo(75, 325);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
 
     // 말풍선 꼬리 (투박하게)
     ctx.beginPath();
-    ctx.moveTo(canvas.width / 2 - 15, 380);
-    ctx.lineTo(canvas.width / 2, 340);
-    ctx.lineTo(canvas.width / 2 + 20, 380);
+    ctx.moveTo(canvas.width / 2 - 15, 320);
+    ctx.lineTo(canvas.width / 2, 270);
+    ctx.lineTo(canvas.width / 2 + 20, 320);
     ctx.closePath();
     ctx.fillStyle = '#ffffff';
     ctx.fill();
     ctx.stroke();
 
-    // 메인 메시지 (투박한 폰트)
+    // 메인 메시지 (아이템명)
     ctx.fillStyle = '#000000';
-    ctx.font = 'bold 28px monospace';
+    ctx.font = 'bold 36px monospace';
     ctx.textAlign = 'center';
-    ctx.fillText(character.message, canvas.width / 2, 420);
+    ctx.fillText(memeItem.item, canvas.width / 2, 370);
 
     // 점수 표시
-    ctx.font = 'bold 20px monospace';
-    ctx.fillText(`${results.totalScore}점`, canvas.width / 2, 450);
+    ctx.font = 'bold 18px monospace';
+    ctx.fillText(`${results.totalScore}점`, canvas.width / 2, 400);
 
-    // 하단 코멘트 (투박하게)
+    // 하단 코멘트 (아이템 설명)
     ctx.fillStyle = '#ffffff';
-    ctx.font = '16px monospace';
-    const commentLines = wrapText(ctx, character.comment, canvas.width - 120);
+    ctx.font = '18px monospace';
+    const commentLines = wrapText(ctx, memeItem.message, canvas.width - 100);
     commentLines.forEach((line, index) => {
-      ctx.fillText(line, canvas.width / 2, 520 + (index * 22));
+      ctx.fillText(line, canvas.width / 2, 490 + (index * 25));
     });
 
     // 투박한 장식 점들
