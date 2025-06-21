@@ -49,25 +49,17 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
       case "emerald":
         return "✨";
       case "amber":
-        return "💫";
+        return "💡";
       case "red":
-        return "🌿";
+        return "🔄";
       default:
         return "✨";
     }
   };
 
   const getBgGradient = () => {
-    switch (results.color) {
-      case "emerald":
-        return "bg-gradient-to-br from-green-400 to-emerald-500";
-      case "amber":
-        return "bg-gradient-to-br from-orange-400 to-amber-500";
-      case "red":
-        return "bg-gradient-to-br from-red-400 to-pink-500";
-      default:
-        return "bg-gradient-to-br from-green-400 to-emerald-500";
-    }
+    // 모든 카테고리에서 동일한 블랙 그라데이션 사용
+    return "bg-gradient-to-br from-gray-800 to-black";
   };
 
   const shareResults = async () => {
@@ -175,14 +167,14 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
           results.categoryScores.accomplishment
         ],
         backgroundColor: [
-          'rgba(239, 68, 68, 0.8)',   // red for exhaustion
-          'rgba(245, 158, 11, 0.8)',  // amber for cynicism  
-          'rgba(59, 130, 246, 0.8)'   // blue for accomplishment
+          'rgba(75, 85, 99, 0.8)',    // gray-600
+          'rgba(107, 114, 128, 0.8)', // gray-500  
+          'rgba(156, 163, 175, 0.8)'  // gray-400
         ],
         borderColor: [
-          'rgba(239, 68, 68, 1)',
-          'rgba(245, 158, 11, 1)',
-          'rgba(59, 130, 246, 1)'
+          'rgba(75, 85, 99, 1)',
+          'rgba(107, 114, 128, 1)',
+          'rgba(156, 163, 175, 1)'
         ],
         borderWidth: 2,
         borderRadius: 8,
@@ -264,19 +256,19 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
             </div>
             <div className="grid grid-cols-3 gap-4 mt-4 text-xs text-center">
               <div>
-                <div className="w-4 h-4 bg-red-400 rounded mx-auto mb-1"></div>
-                <div className="font-medium">정서적 탈진</div>
-                <div className="text-gray-600">{results.categoryScores.exhaustion}점</div>
+                <div className="w-4 h-4 bg-gray-600 rounded mx-auto mb-1"></div>
+                <div className="font-medium text-gray-700">정서적 탈진</div>
+                <div className="text-gray-500">{results.categoryScores.exhaustion}점</div>
               </div>
               <div>
-                <div className="w-4 h-4 bg-amber-400 rounded mx-auto mb-1"></div>
-                <div className="font-medium">냉소적 태도</div>
-                <div className="text-gray-600">{results.categoryScores.cynicism}점</div>
+                <div className="w-4 h-4 bg-gray-500 rounded mx-auto mb-1"></div>
+                <div className="font-medium text-gray-700">냉소적 태도</div>
+                <div className="text-gray-500">{results.categoryScores.cynicism}점</div>
               </div>
               <div>
-                <div className="w-4 h-4 bg-blue-400 rounded mx-auto mb-1"></div>
-                <div className="font-medium">성취감 감소</div>
-                <div className="text-gray-600">{results.categoryScores.accomplishment}점</div>
+                <div className="w-4 h-4 bg-gray-400 rounded mx-auto mb-1"></div>
+                <div className="font-medium text-gray-700">성취감 감소</div>
+                <div className="text-gray-500">{results.categoryScores.accomplishment}점</div>
               </div>
             </div>
           </CardContent>
@@ -307,7 +299,7 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
           <Button
             onClick={shareWithImage}
             disabled={isGeneratingImage}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
+            className="w-full bg-gray-800 hover:bg-gray-900 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
           >
             {isGeneratingImage ? (
               <>
@@ -326,7 +318,7 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
             <Button
               onClick={() => shareToSocial('twitter')}
               variant="outline"
-              className="flex-1 bg-white border-gray-300 text-gray-700 font-medium py-3 rounded-2xl transition-all duration-300"
+              className="flex-1 bg-white border-gray-200 hover:bg-gray-50 text-gray-800 font-medium py-3 rounded-2xl transition-all duration-300"
             >
               <Twitter className="w-4 h-4 mr-2" />
               X
@@ -334,7 +326,7 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
             <Button
               onClick={() => shareToSocial('instagram')}
               variant="outline"
-              className="flex-1 bg-white border-gray-300 text-gray-700 font-medium py-3 rounded-2xl transition-all duration-300"
+              className="flex-1 bg-white border-gray-200 hover:bg-gray-50 text-gray-800 font-medium py-3 rounded-2xl transition-all duration-300"
             >
               <Instagram className="w-4 h-4 mr-2" />
               인스타
@@ -342,16 +334,17 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
             <Button
               onClick={() => shareToSocial('kakao')}
               variant="outline"
-              className="flex-1 bg-white border-gray-300 text-gray-700 font-medium py-3 rounded-2xl transition-all duration-300"
+              className="flex-1 bg-white border-gray-200 hover:bg-gray-50 text-gray-800 font-medium py-3 rounded-2xl transition-all duration-300"
             >
-              💬 카톡
+              <span className="text-gray-600 mr-2">💬</span>
+              카톡
             </Button>
           </div>
 
           <Button
             onClick={shareResults}
             variant="outline"
-            className="w-full bg-white border-gray-300 text-gray-700 font-medium py-3 rounded-2xl transition-all duration-300"
+            className="w-full bg-white border-gray-200 hover:bg-gray-50 text-gray-800 font-medium py-3 rounded-2xl transition-all duration-300"
           >
             <Share className="w-4 h-4 mr-2" />
             기본 공유하기

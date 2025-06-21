@@ -41,9 +41,8 @@ export function generateOGImage(results: BurnoutResult): Promise<string> {
     ctx.textAlign = 'center';
     ctx.fillText('번아웃 체크 결과', canvas.width / 2, 180);
 
-    // 점수 원형 배경
-    const scoreColor = getScoreColor(results.color);
-    ctx.fillStyle = scoreColor;
+    // 점수 원형 배경 - 통일된 블랙 색상
+    ctx.fillStyle = '#000000';
     ctx.beginPath();
     ctx.arc(canvas.width / 2, 320, 80, 0, 2 * Math.PI);
     ctx.fill();
@@ -97,16 +96,8 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: n
 }
 
 function getScoreColor(color: string): string {
-  switch (color) {
-    case 'emerald':
-      return '#10b981';
-    case 'amber':
-      return '#f59e0b';
-    case 'red':
-      return '#ef4444';
-    default:
-      return '#10b981';
-  }
+  // 모든 카테고리에서 동일한 블랙 색상 사용
+  return '#000000';
 }
 
 function getCategoryEmoji(color: string): string {
@@ -114,9 +105,9 @@ function getCategoryEmoji(color: string): string {
     case 'emerald':
       return '✨';
     case 'amber':
-      return '💫';
+      return '💡';
     case 'red':
-      return '🌿';
+      return '🔄';
     default:
       return '✨';
   }
