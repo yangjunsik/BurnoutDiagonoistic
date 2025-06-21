@@ -24,7 +24,7 @@ function getMemeItem(totalScore: number): { category: string; item: string; mess
       { item: "맥주", message: "캬 이거지", emoji: "🍺" },
       { item: "넷플릭스", message: "현실도피 1등급", emoji: "📺" },
       { item: "센드벡", message: "누군가를 떠올려보자", emoji: "🥊" },
-      { item: "야식", message: "치킨은 살찌니까 족발로", emoji: "🍖" }
+      { item: "퇴근", message: "오늘 제일 잘한일", emoji: "🚪" }
     ];
   } else {
     // 심한 번아웃 - 극단적인 해결책들
