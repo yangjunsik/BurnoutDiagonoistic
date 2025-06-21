@@ -1,7 +1,9 @@
-import { Sparkles, Heart, AlertTriangle, Share } from "lucide-react";
+import { Sparkles, Heart, AlertTriangle, Share, Download, Instagram, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { type BurnoutResult } from "@/lib/burnoutScoring";
+import { generateOGImage } from "@/lib/ogImageGenerator";
+import { useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,6 +30,7 @@ interface BurnoutResultsProps {
 }
 
 export default function BurnoutResults({ results, onRestart }: BurnoutResultsProps) {
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const getIcon = () => {
     switch (results.color) {
       case "emerald":
@@ -88,6 +91,76 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
       } catch (error) {
         console.error('Failed to copy to clipboard:', error);
       }
+    }
+  };
+
+  const shareWithImage = async () => {
+    setIsGeneratingImage(true);
+    try {
+      const imageUrl = await generateOGImage(results);
+      
+      if (imageUrl) {
+        // 이미지를 파일로 변환
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const file = new File([blob], `burnout-result-${results.totalScore}.png`, { type: 'image/png' });
+        
+        const resultText = `번아웃 체크 결과: ${results.totalScore}점 (${results.category})\n\n✨ 나도 체크해보기: ${window.location.origin}`;
+        
+        if (navigator.share && navigator.canShare?.({ files: [file] })) {
+          // 이미지와 함께 공유
+          await navigator.share({
+            title: '번아웃 체크 결과',
+            text: resultText,
+            files: [file]
+          });
+        } else {
+          // 이미지 다운로드
+          const link = document.createElement('a');
+          link.href = imageUrl;
+          link.download = `burnout-result-${results.totalScore}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // 텍스트는 클립보드에 복사
+          await navigator.clipboard.writeText(resultText);
+          alert('이미지가 다운로드되고 텍스트가 클립보드에 복사되었어요!');
+        }
+        
+        // URL 정리
+        URL.revokeObjectURL(imageUrl);
+      }
+    } catch (error) {
+      console.error('Image generation failed:', error);
+      alert('이미지 생성에 실패했어요. 다시 시도해주세요.');
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
+
+  const shareToSocial = (platform: string) => {
+    const resultText = `번아웃 체크 결과: ${results.totalScore}점 (${results.category}) 😱\n\n나도 체크해보기 👉`;
+    const url = window.location.origin;
+    
+    let shareUrl = '';
+    
+    switch (platform) {
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(resultText)}&url=${encodeURIComponent(url)}`;
+        break;
+      case 'instagram':
+        // 인스타그램은 직접 공유가 안되므로 클립보드 복사
+        navigator.clipboard.writeText(`${resultText} ${url}`);
+        alert('인스타그램용 텍스트가 클립보드에 복사되었어요!\n스토리나 피드에 붙여넣기 해주세요.');
+        return;
+      case 'kakao':
+        shareUrl = `https://story.kakao.com/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(resultText)}`;
+        break;
+    }
+    
+    if (shareUrl) {
+      window.open(shareUrl, '_blank', 'width=600,height=400');
     }
   };
 
@@ -230,13 +303,58 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
           >
             다시 체크하기
           </Button>
+          
+          <Button
+            onClick={shareWithImage}
+            disabled={isGeneratingImage}
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
+          >
+            {isGeneratingImage ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                이미지 생성 중...
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 mr-2" />
+                결과 카드 생성하기
+              </>
+            )}
+          </Button>
+
+          <div className="flex gap-2">
+            <Button
+              onClick={() => shareToSocial('twitter')}
+              variant="outline"
+              className="flex-1 bg-white border-gray-300 text-gray-700 font-medium py-3 rounded-2xl transition-all duration-300"
+            >
+              <Twitter className="w-4 h-4 mr-2" />
+              X
+            </Button>
+            <Button
+              onClick={() => shareToSocial('instagram')}
+              variant="outline"
+              className="flex-1 bg-white border-gray-300 text-gray-700 font-medium py-3 rounded-2xl transition-all duration-300"
+            >
+              <Instagram className="w-4 h-4 mr-2" />
+              인스타
+            </Button>
+            <Button
+              onClick={() => shareToSocial('kakao')}
+              variant="outline"
+              className="flex-1 bg-white border-gray-300 text-gray-700 font-medium py-3 rounded-2xl transition-all duration-300"
+            >
+              💬 카톡
+            </Button>
+          </div>
+
           <Button
             onClick={shareResults}
             variant="outline"
-            className="w-full bg-white border-gray-300 text-gray-700 font-medium py-4 rounded-2xl transition-all duration-300"
+            className="w-full bg-white border-gray-300 text-gray-700 font-medium py-3 rounded-2xl transition-all duration-300"
           >
             <Share className="w-4 h-4 mr-2" />
-            결과 공유하기
+            기본 공유하기
           </Button>
         </div>
 
