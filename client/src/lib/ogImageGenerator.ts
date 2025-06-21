@@ -1,82 +1,53 @@
-import { type BurnoutResult } from './burnoutScoring';
-
-export function generateOGImage(results: BurnoutResult): Promise<string> {
+export function generateOGImage(): Promise<string> {
   return new Promise((resolve) => {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d')!;
     
-    if (!ctx) {
-      resolve('');
-      return;
-    }
-
-    // Canvas 크기 설정 (1200x630 - OG 이미지 권장 크기)
+    // OG 이미지 표준 크기 (1200x630)
     canvas.width = 1200;
     canvas.height = 630;
 
-    // 배경 그라데이션
-    const backgroundGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    backgroundGradient.addColorStop(0, '#f8fafc');
-    backgroundGradient.addColorStop(1, '#e2e8f0');
-    ctx.fillStyle = backgroundGradient;
+    // 그라데이션 배경
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, '#6366f1'); // 보라색
+    gradient.addColorStop(1, '#ec4899'); // 핑크색
+    
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // 메인 카드 배경
+    // 메인 제목
     ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetY = 10;
-    const cardRadius = 24;
-    roundRect(ctx, 60, 60, canvas.width - 120, canvas.height - 120, cardRadius);
-    ctx.fill();
-
-    // 그림자 리셋
-    ctx.shadowColor = 'transparent';
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetY = 0;
-
-    // 제목
-    ctx.fillStyle = '#000000';
-    ctx.font = 'bold 48px system-ui, -apple-system, sans-serif';
+    ctx.font = 'bold 72px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('번아웃 체크 결과', canvas.width / 2, 180);
+    ctx.fillText('번아웃 자가진단 테스트', canvas.width / 2, 200);
 
-    // 점수 원형 배경 - 그라데이션 효과 (보라-핑크)
-    const scoreGradient = ctx.createLinearGradient(canvas.width / 2 - 80, 240, canvas.width / 2 + 80, 400);
-    scoreGradient.addColorStop(0, '#8b5cf6'); // purple-500
-    scoreGradient.addColorStop(1, '#ec4899'); // pink-500
-    ctx.fillStyle = scoreGradient;
-    ctx.beginPath();
-    ctx.arc(canvas.width / 2, 320, 80, 0, 2 * Math.PI);
-    ctx.fill();
+    // 서브 제목
+    ctx.font = '36px Arial, sans-serif';
+    ctx.fillText('내 상태 확인하기', canvas.width / 2, 280);
 
-    // 점수 텍스트
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 56px system-ui, -apple-system, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${results.totalScore}점`, canvas.width / 2, 340);
+    // 설명 텍스트
+    ctx.font = '28px Arial, sans-serif';
+    ctx.fillText('MBI 기반 과학적 진단 • 12문항 2분 완료', canvas.width / 2, 350);
 
-    // 카테고리
-    ctx.fillStyle = '#000000';
-    ctx.font = 'bold 40px system-ui, -apple-system, sans-serif';
-    const emoji = getCategoryEmoji(results.color);
-    ctx.fillText(`${emoji} ${results.category}`, canvas.width / 2, 450);
+    // 아이콘/이모지 (간단한 얼굴)
+    ctx.font = '120px Arial, sans-serif';
+    ctx.fillText('😰', canvas.width / 2 - 150, 480);
+    ctx.fillText('😐', canvas.width / 2, 480);
+    ctx.fillText('😊', canvas.width / 2 + 150, 480);
 
-    // 부제목
-    ctx.fillStyle = '#64748b';
-    ctx.font = '24px system-ui, -apple-system, sans-serif';
-    ctx.fillText('총 60점 중', canvas.width / 2, 490);
+    // 하단 URL
+    ctx.font = '24px Arial, sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.fillText('burnout-check.site', canvas.width / 2, 570);
 
-    // 웹사이트 URL
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '20px system-ui, -apple-system, sans-serif';
-    ctx.fillText('burnout-check.site', canvas.width / 2, 550);
-
-    // Canvas를 blob으로 변환 후 URL 생성
+    // 이미지를 Base64로 변환
     canvas.toBlob((blob) => {
       if (blob) {
-        const url = URL.createObjectURL(blob);
-        resolve(url);
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve(reader.result as string);
+        };
+        reader.readAsDataURL(blob);
       } else {
         resolve('');
       }
@@ -84,34 +55,98 @@ export function generateOGImage(results: BurnoutResult): Promise<string> {
   });
 }
 
-function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+// 서버에서 사용할 정적 OG 이미지 생성
+export async function generateStaticOGImage() {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d')!;
+  
+  canvas.width = 1200;
+  canvas.height = 630;
+
+  // 그라데이션 배경
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, '#6366f1');
+  gradient.addColorStop(1, '#ec4899');
+  
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // 메인 제목
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 72px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('번아웃 자가진단 테스트', canvas.width / 2, 200);
+
+  // 서브 제목
+  ctx.font = '36px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillText('내 상태 확인하기', canvas.width / 2, 280);
+
+  // 설명 텍스트
+  ctx.font = '28px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillText('MBI 기반 과학적 진단 • 12문항 2분 완료', canvas.width / 2, 350);
+
+  // 간단한 원형 아이콘들 (이모지 대신)
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+  
+  // 슬픈 얼굴
   ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.lineTo(x + width - radius, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-  ctx.lineTo(x + width, y + height - radius);
-  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-  ctx.lineTo(x + radius, y + height);
-  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-  ctx.lineTo(x, y + radius);
-  ctx.quadraticCurveTo(x, y, x + radius, y);
-  ctx.closePath();
+  ctx.arc(450, 450, 40, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.fillStyle = '#6366f1';
+  ctx.beginPath();
+  ctx.arc(435, 435, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(465, 435, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(450, 470, 15, Math.PI, 2 * Math.PI);
+  ctx.stroke();
+
+  // 중간 얼굴
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+  ctx.beginPath();
+  ctx.arc(600, 450, 40, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.fillStyle = '#6366f1';
+  ctx.beginPath();
+  ctx.arc(585, 435, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(615, 435, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(585, 465);
+  ctx.lineTo(615, 465);
+  ctx.stroke();
+
+  // 행복한 얼굴
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+  ctx.beginPath();
+  ctx.arc(750, 450, 40, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.fillStyle = '#6366f1';
+  ctx.beginPath();
+  ctx.arc(735, 435, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(765, 435, 5, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(750, 460, 15, 0, Math.PI);
+  ctx.stroke();
+
+  // 하단 URL
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+  ctx.font = '24px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillText('burnout-check.site', canvas.width / 2, 570);
+
+  return canvas.toDataURL('image/png');
 }
 
-function getScoreColor(color: string): string {
-  // 모든 카테고리에서 보라색 포인트 컬러 사용
-  return '#8b5cf6'; // purple-500
-}
-
-function getCategoryEmoji(color: string): string {
-  switch (color) {
-    case 'emerald':
-      return '✨';
-    case 'amber':
-      return '💡';
-    case 'red':
-      return '🔄';
-    default:
-      return '✨';
-  }
+// 페이지 로드 시 OG 이미지 생성 및 설정 (클라이언트 사이드에서는 제한적)
+export async function setupOGImage() {
+  // 클라이언트 사이드에서는 메타 태그 동적 변경이 SNS 크롤러에 효과가 제한적이므로
+  // 정적 이미지 파일을 사용하는 것이 좋습니다
+  console.log('OG 이미지는 정적 파일로 설정되어 있습니다.');
 }
