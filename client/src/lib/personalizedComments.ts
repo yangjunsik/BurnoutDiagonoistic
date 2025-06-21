@@ -43,7 +43,7 @@ export function generatePersonalizedComment(
   }
 
   // 결과별 격려 메시지
-  const encouragementMessages = {
+  const encouragementMessages: Record<string, string[]> = {
     "건강한 상태": [
       "정말 잘 관리하고 계시네요! 🌟",
       "균형잡힌 생활을 유지하고 계시는군요! ✨",

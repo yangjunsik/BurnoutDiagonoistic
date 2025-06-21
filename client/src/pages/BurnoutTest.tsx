@@ -74,7 +74,7 @@ export default function BurnoutTest() {
   }
 
   if (testState === "results" && results) {
-    return <BurnoutResults results={results} onRestart={restartTest} />;
+    return <BurnoutResults results={results} answers={answers} onRestart={restartTest} />;
   }
 
   return null;

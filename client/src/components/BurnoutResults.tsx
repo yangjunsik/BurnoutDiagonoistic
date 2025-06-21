@@ -1,9 +1,11 @@
-import { Sparkles, Heart, AlertTriangle, Share, Download, Instagram, Twitter } from "lucide-react";
+import { Sparkles, Heart, AlertTriangle, Share, Download, Instagram, Twitter, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { type BurnoutResult } from "@/lib/burnoutScoring";
 import { generateOGImage } from "@/lib/ogImageGenerator";
-import { useState } from "react";
+import { generatePersonalizedComment } from "@/lib/personalizedComments";
+import { generateMemeImage, downloadMemeImage } from "@/lib/memeGenerator";
+import { useState, useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,11 +28,20 @@ ChartJS.register(
 
 interface BurnoutResultsProps {
   results: BurnoutResult;
+  answers: number[];
   onRestart: () => void;
 }
 
-export default function BurnoutResults({ results, onRestart }: BurnoutResultsProps) {
+export default function BurnoutResults({ results, answers, onRestart }: BurnoutResultsProps) {
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [isGeneratingMeme, setIsGeneratingMeme] = useState(false);
+  const [personalizedComment, setPersonalizedComment] = useState<string>("");
+
+  // Generate personalized comment on component mount
+  useEffect(() => {
+    const comment = generatePersonalizedComment(answers, results);
+    setPersonalizedComment(comment);
+  }, [answers, results]);
   const getIcon = () => {
     switch (results.color) {
       case "emerald":
@@ -67,6 +78,18 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
         return "bg-gradient-to-br from-purple-500 to-pink-500";
       default:
         return "bg-gradient-to-br from-purple-500 to-pink-500";
+    }
+  };
+
+  const generateMeme = async () => {
+    setIsGeneratingMeme(true);
+    try {
+      const memeUrl = await generateMemeImage(results, personalizedComment);
+      downloadMemeImage(memeUrl, `번아웃체크-${results.category}-${Date.now()}.png`);
+    } catch (error) {
+      console.error('Failed to generate meme:', error);
+    } finally {
+      setIsGeneratingMeme(false);
     }
   };
 
@@ -252,6 +275,14 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
               <p className="text-gray-700 leading-relaxed">
                 {results.message}
               </p>
+              
+              {personalizedComment && (
+                <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
+                  <p className="text-gray-800 text-sm font-medium leading-relaxed">
+                    💡 {personalizedComment}
+                  </p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -304,23 +335,44 @@ export default function BurnoutResults({ results, onRestart }: BurnoutResultsPro
             다시 체크하기
           </Button>
           
-          <Button
-            onClick={shareWithImage}
-            disabled={isGeneratingImage}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
-          >
-            {isGeneratingImage ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                이미지 생성 중...
-              </>
-            ) : (
-              <>
-                <Download className="w-4 h-4 mr-2" />
-                결과 카드 생성하기
-              </>
-            )}
-          </Button>
+          <div className="space-y-3">
+            <Button
+              onClick={generateMeme}
+              disabled={isGeneratingMeme}
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
+            >
+              {isGeneratingMeme ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  밈 이미지 생성 중...
+                </>
+              ) : (
+                <>
+                  <ImageIcon className="w-4 h-4 mr-2" />
+                  내 결과 밈 이미지 저장하기
+                </>
+              )}
+            </Button>
+
+            <Button
+              onClick={shareWithImage}
+              disabled={isGeneratingImage}
+              variant="outline"
+              className="w-full bg-white border-gray-200 hover:bg-gray-50 text-gray-800 font-medium py-3 rounded-2xl transition-all duration-300 disabled:opacity-50"
+            >
+              {isGeneratingImage ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin mr-2"></div>
+                  OG 이미지 생성 중...
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4 mr-2" />
+                  일반 결과 카드 생성하기
+                </>
+              )}
+            </Button>
+          </div>
 
           <div className="flex gap-2">
             <Button
