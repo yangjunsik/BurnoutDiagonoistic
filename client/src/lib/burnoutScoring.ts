@@ -47,8 +47,9 @@ export function calculateBurnoutScore(answers: number[]): BurnoutResult {
     accomplishment: Math.round(accomplishmentScore)
   };
 
-  // Adjusted thresholds for 12 questions with weights (max ~84 points)
-  if (totalScore <= 25) {
+  // 12 questions × 6 points = max 72 points
+  // Low burnout: 0-24 (0-33% of max), Medium: 25-48 (34-66%), High: 49-72 (67-100%)
+  if (totalScore <= 24) {
     return {
       totalScore,
       categoryScores,
@@ -62,7 +63,7 @@ export function calculateBurnoutScore(answers: number[]): BurnoutResult {
         "일과 휴식의 경계 명확히 하기"
       ]
     };
-  } else if (totalScore <= 45) {
+  } else if (totalScore <= 48) {
     return {
       totalScore,
       categoryScores,
