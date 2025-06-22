@@ -183,11 +183,3 @@ export function generateMemeImage(results: BurnoutResult, personalizedComment: s
   });
 }
 
-export function downloadMemeImage(imageUrl: string, filename: string = 'burnout-meme.png') {
-  const link = document.createElement('a');
-  link.href = imageUrl;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}

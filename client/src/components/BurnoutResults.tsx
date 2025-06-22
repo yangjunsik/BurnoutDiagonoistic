@@ -1,10 +1,10 @@
-import { Sparkles, Heart, AlertTriangle, Share, Download, Instagram, Twitter, ImageIcon } from "lucide-react";
+import { Sparkles, Heart, AlertTriangle, Share, Download, Instagram, Twitter, ImageIcon, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { type BurnoutResult } from "@/lib/burnoutScoring";
-import { generateOGImage } from "@/lib/ogImageGenerator";
 import { generatePersonalizedComment } from "@/lib/personalizedComments";
-import { generateMemeImage, downloadMemeImage } from "@/lib/memeGenerator";
+import { generateMemeImage } from "@/lib/memeGenerator";
 import { useState, useEffect } from "react";
 import {
   Chart as ChartJS,
@@ -36,6 +36,7 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [memeImageUrl, setMemeImageUrl] = useState<string>("");
   const [personalizedComment, setPersonalizedComment] = useState<string>("");
+  const [showScreenshotModal, setShowScreenshotModal] = useState(false);
 
   // Generate personalized comment and meme on component mount
   useEffect(() => {
@@ -86,10 +87,8 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
     }
   };
 
-  const downloadMeme = () => {
-    if (memeImageUrl) {
-      downloadMemeImage(memeImageUrl, `번아웃체크-${results.category}-${Date.now()}.png`);
-    }
+  const openScreenshotModal = () => {
+    setShowScreenshotModal(true);
   };
 
   const shareResults = async () => {
@@ -116,50 +115,7 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
     }
   };
 
-  const shareWithImage = async () => {
-    setIsGeneratingImage(true);
-    try {
-      const imageUrl = await generateOGImage(results);
-      
-      if (imageUrl) {
-        // 이미지를 파일로 변환
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
-        const file = new File([blob], `burnout-result-${results.totalScore}.png`, { type: 'image/png' });
-        
-        const resultText = `번아웃 체크 결과: ${results.totalScore}점 (${results.category})\n\n✨ 나도 체크해보기: ${window.location.origin}`;
-        
-        if (navigator.share && navigator.canShare?.({ files: [file] })) {
-          // 이미지와 함께 공유
-          await navigator.share({
-            title: '번아웃 체크 결과',
-            text: resultText,
-            files: [file]
-          });
-        } else {
-          // 이미지 다운로드
-          const link = document.createElement('a');
-          link.href = imageUrl;
-          link.download = `burnout-result-${results.totalScore}.png`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          
-          // 텍스트는 클립보드에 복사
-          await navigator.clipboard.writeText(resultText);
-          alert('이미지가 다운로드되고 텍스트가 클립보드에 복사되었어요!');
-        }
-        
-        // URL 정리
-        URL.revokeObjectURL(imageUrl);
-      }
-    } catch (error) {
-      console.error('Image generation failed:', error);
-      alert('이미지 생성에 실패했어요. 다시 시도해주세요.');
-    } finally {
-      setIsGeneratingImage(false);
-    }
-  };
+
 
   const shareToSocial = (platform: string) => {
     const resultText = `번아웃 체크 결과: ${results.totalScore}점 (${results.category}) 😱\n\n나도 체크해보기 👉`;
@@ -352,33 +308,48 @@ export default function BurnoutResults({ results, answers, onRestart }: BurnoutR
           )}
 
           <div className="space-y-3">
-            <Button
-              onClick={downloadMeme}
-              disabled={!memeImageUrl}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
-            >
-              <ImageIcon className="w-4 h-4 mr-2" />
-              내게 필요한건 다운로드
-            </Button>
-
-            <Button
-              onClick={shareWithImage}
-              disabled={isGeneratingImage}
-              variant="outline"
-              className="w-full bg-white border-gray-200 hover:bg-gray-50 text-gray-800 font-medium py-3 rounded-2xl transition-all duration-300 disabled:opacity-50"
-            >
-              {isGeneratingImage ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin mr-2"></div>
-                  OG 이미지 생성 중...
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4 mr-2" />
-                  일반 결과 카드 생성하기
-                </>
-              )}
-            </Button>
+            <Dialog open={showScreenshotModal} onOpenChange={setShowScreenshotModal}>
+              <DialogTrigger asChild>
+                <Button
+                  onClick={openScreenshotModal}
+                  disabled={!memeImageUrl}
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-4 rounded-2xl transition-all duration-300 disabled:opacity-50"
+                >
+                  <Camera className="w-4 h-4 mr-2" />
+                  내게 필요한건 저장하기
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>이미지 저장 방법</DialogTitle>
+                  <DialogDescription>
+                    아래 방법으로 이미지를 저장할 수 있습니다
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-medium mb-2">📱 모바일 (아이폰/안드로이드)</h4>
+                    <ol className="text-sm text-gray-600 space-y-1">
+                      <li>1. 이미지를 길게 눌러주세요</li>
+                      <li>2. "이미지 저장" 또는 "사진에 저장" 선택</li>
+                    </ol>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-medium mb-2">💻 컴퓨터 (PC/Mac)</h4>
+                    <ol className="text-sm text-gray-600 space-y-1">
+                      <li>1. 이미지에 마우스 우클릭</li>
+                      <li>2. "이미지를 다른 이름으로 저장" 선택</li>
+                    </ol>
+                  </div>
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <h4 className="font-medium mb-2">📷 스크린샷</h4>
+                    <p className="text-sm text-gray-600">
+                      화면 전체를 스크린샷으로 찍어서 저장하셔도 됩니다
+                    </p>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <div className="flex gap-2">
